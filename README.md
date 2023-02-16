@@ -13,6 +13,7 @@ This allows to expose all the services from a single endpoint.
 
 Every service defines endpoints such as: `[service].[namespace].svc.cluster.local`. Given two services `foo` and `bar` in the `default `namespace`,
 you can create the ServiceProxy CRD such as:
+
 ```yaml
 apiVersion: cache.service-proxy-operator.local/v1alpha1
 kind: ServiceProxy
@@ -31,6 +32,7 @@ If you have an ingress gateway setup to your cluster, you can then query your se
 
 ## Operator Capabilities
 This demonstration operator only does simple tasks such as:
+
 - Create the necessary resource (Deployment, Service, ConfigMap, Ingress) upon creating the `ServiceProxy` CR.
 - Update the ConfigMap whenever the CR changes (to apply)
 
@@ -41,23 +43,31 @@ You’ll need a Kubernetes cluster to run against. You can use [KIND](https://si
 You can use `./hack/kind-start.sh` to start a kind cluster with a `localhost:80` ingress gateway, along with a local image registry.
 ### Running on the cluster
 The following `Makefile` makes use of the local image registry by default. Overwrite it by setting `IMG=<some-registry>/service-proxy-operator:tag` in `make` commands.
+
 1. Build and push the operator:
+
 ```shell
 make docker-build docker-push
 ```
-1. Deploy to the cluster in the current kubernetes context:
+
+2. Deploy to the cluster in the current kubernetes context:
+
 ```shell
 make deploy
 ```
-1. Install sample Instances of Custom Resources:
+
+3. Install sample Instances of Custom Resources:
+
 The sample CR deploys [`agnhost`](https://pkg.go.dev/k8s.io/kubernetes/test/images/agnhost) for testing purposes
 
 ```sh
 kubectl apply -f config/samples/
 ```
-1. Query the services
+
+4. Query the services
 
 The Hostnames are the same as we're using two services pointing to the same pod.
+
 ```shell
 $> curl localhost/agnhost/hostname
 agnhost-55755b8ff-kxhg8
@@ -94,4 +104,3 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-

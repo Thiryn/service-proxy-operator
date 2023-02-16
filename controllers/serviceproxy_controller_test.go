@@ -36,7 +36,6 @@ import (
 
 var _ = Describe("ServiceProxy controller", func() {
 	Context("ServiceProxy controller test", func() {
-
 		const ServiceProxyName = "test-service-proxy"
 
 		ctx := context.Background()
@@ -123,9 +122,11 @@ var _ = Describe("ServiceProxy controller", func() {
 			Eventually(func() error {
 				if serviceProxy.Status.Conditions != nil && len(serviceProxy.Status.Conditions) != 0 {
 					latestStatusCondition := serviceProxy.Status.Conditions[len(serviceProxy.Status.Conditions)-1]
-					expectedLatestStatusCondition := metav1.Condition{Type: typeAvailableServiceProxy,
+					expectedLatestStatusCondition := metav1.Condition{
+						Type:   typeAvailableServiceProxy,
 						Status: metav1.ConditionTrue, Reason: "Reconciling",
-						Message: fmt.Sprintf("Deployment for custom resource (%s) created successfully", serviceProxy.Name)}
+						Message: fmt.Sprintf("Deployment for custom resource (%s) created successfully", serviceProxy.Name),
+					}
 					if latestStatusCondition != expectedLatestStatusCondition {
 						return fmt.Errorf("The latest status condition added to the serviceProxy instance is not as expected")
 					}

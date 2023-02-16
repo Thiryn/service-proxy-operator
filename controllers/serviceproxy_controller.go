@@ -19,6 +19,10 @@ package controllers
 import (
 	"context"
 	"fmt"
+	"os"
+	"reflect"
+	"strings"
+
 	"github.com/thiryn/service-proxy-operator/api/v1alpha1"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -28,12 +32,10 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/tools/record"
-	"os"
-	"reflect"
+
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
-	"strings"
 )
 
 // Definitions to manage status conditions
@@ -164,9 +166,11 @@ func (r *ServiceProxyReconciler) Reconcile(ctx context.Context, req ctrl.Request
 }
 
 func (r *ServiceProxyReconciler) updateStatusConditions(ctx context.Context, conditionType, reason, message string, ServiceProxy *v1alpha1.ServiceProxy) error {
-	condition := metav1.Condition{Type: conditionType,
+	condition := metav1.Condition{
+		Type:   conditionType,
 		Status: metav1.ConditionTrue, Reason: reason,
-		Message: message}
+		Message: message,
+	}
 	if reason != typeAvailableServiceProxy {
 		condition.Status = metav1.ConditionFalse
 	}
@@ -192,7 +196,8 @@ func labelsForServiceProxy(name string) map[string]string {
 	if err == nil {
 		imageTag = strings.Split(image, ":")[1]
 	}
-	return map[string]string{"app.kubernetes.io/name": "ServiceProxy",
+	return map[string]string{
+		"app.kubernetes.io/name":       "ServiceProxy",
 		"app.kubernetes.io/instance":   name,
 		"app.kubernetes.io/version":    imageTag,
 		"app.kubernetes.io/part-of":    "service-proxy-operator",
@@ -203,7 +208,7 @@ func labelsForServiceProxy(name string) map[string]string {
 // imageForServiceProxy gets the Operand image which is managed by this controller
 // from the SERVICEPROXY_IMAGE environment variable defined in the config/manager/manager.yaml
 func imageForServiceProxy() (string, error) {
-	var imageEnvVar = "SERVICEPROXY_IMAGE"
+	imageEnvVar := "SERVICEPROXY_IMAGE"
 	image, found := os.LookupEnv(imageEnvVar)
 	if !found {
 		return "", fmt.Errorf("Unable to find %s environment variable with the image", imageEnvVar)

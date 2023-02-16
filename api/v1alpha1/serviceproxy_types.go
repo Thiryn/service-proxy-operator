@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	"fmt"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -104,7 +105,7 @@ func (s ServiceProxy) ServiceListMatches(serviceList []string) bool {
 				break
 			}
 		}
-		if found == false {
+		if !found {
 			return false
 		}
 	}

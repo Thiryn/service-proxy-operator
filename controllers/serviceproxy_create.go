@@ -2,6 +2,9 @@ package controllers
 
 import (
 	"context"
+	"os"
+	"strings"
+
 	"github.com/thiryn/service-proxy-operator/api/v1alpha1"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -10,11 +13,10 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	"os"
+
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
-	"strings"
 )
 
 func (r *ServiceProxyReconciler) reconcileConfigMap(ctx context.Context, serviceProxy *v1alpha1.ServiceProxy) error {
@@ -45,7 +47,7 @@ func (r *ServiceProxyReconciler) reconcileConfigMap(ctx context.Context, service
 	}
 	l.Info("ConfigMap found, check for changes")
 	// The configmap has been found. Let's check if we need to update it
-	if serviceProxy.ServiceListMatches(serviceProxy.Status.ServiceNames) == false {
+	if !serviceProxy.ServiceListMatches(serviceProxy.Status.ServiceNames) {
 		l.Info("Configmap changes found, updating")
 		// services are not matching, update the config
 		if newConfigMap, err := r.makeConfigMap(serviceProxy); err != nil {
@@ -100,7 +102,8 @@ func (r *ServiceProxyReconciler) createIngress(ctx context.Context, serviceProxy
 												},
 											},
 										},
-									}},
+									},
+								},
 							},
 						},
 					}},
@@ -225,7 +228,8 @@ func (r *ServiceProxyReconciler) makeConfigMap(serviceProxy *v1alpha1.ServicePro
 
 // makeDeployment returns a ServiceProxy Deployment object
 func (r *ServiceProxyReconciler) makeDeployment(
-	serviceProxy *v1alpha1.ServiceProxy) (*appsv1.Deployment, error) {
+	serviceProxy *v1alpha1.ServiceProxy,
+) (*appsv1.Deployment, error) {
 	labels := labelsForServiceProxy(serviceProxy.Name)
 
 	// Get the Operand image
