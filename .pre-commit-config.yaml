@@ -1,0 +1,48 @@
+repos:
+  -   repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v2.3.0
+      hooks:
+        -   id: end-of-file-fixer
+        -   id: trailing-whitespace
+  -   repo: https://github.com/adrienverge/yamllint.git
+      rev: v1.29.0  # or higher tag
+      hooks:
+        - id: yamllint
+          args: [--format, parsable, --strict]
+
+  -   repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
+      rev: 0.2.2  # or other specific tag
+      hooks:
+        - id: yamlfmt
+  -   repo: https://github.com/hadolint/hadolint
+      rev: v2.12.0
+      hooks:
+        -   id: hadolint-docker
+        -   id: hadolint
+  -   repo: https://github.com/adrienverge/yamllint
+      rev: v1.29.0
+      hooks:
+        -   id: yamllint
+  -   repo: https://github.com/golangci/golangci-lint
+      rev: v1.50.1
+      hooks:
+        -   id: golangci-lint
+  -   repo: https://github.com/jumanjihouse/pre-commit-hooks
+      rev: 3.0.0
+      hooks:
+        -   id: markdownlint
+  -   repo: https://github.com/golangci/golangci-lint
+      rev: v1.50.1
+      hooks:
+        -   id: golangci-lint
+  -   repo: https://github.com/TekWizely/pre-commit-golang
+      rev: v1.0.0-rc.1
+      hooks:
+        -   id: go-fmt
+        -   id: go-fumpt
+            args: [-l, -w]
+        -   id: go-imports
+            args: [-l, -w]
+#        -   id: go-lint
+        -   id: go-returns
+            args: [-l, -w]

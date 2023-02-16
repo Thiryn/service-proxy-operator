@@ -1,0 +1,27 @@
+# permissions for end users to view serviceproxies.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: serviceproxy-viewer-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: service-proxy-operator
+    app.kubernetes.io/part-of: service-proxy-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: serviceproxy-viewer-role
+rules:
+- apiGroups:
+  - cache.service-proxy-operator.local
+  resources:
+  - serviceproxies
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - cache.service-proxy-operator.local
+  resources:
+  - serviceproxies/status
+  verbs:
+  - get

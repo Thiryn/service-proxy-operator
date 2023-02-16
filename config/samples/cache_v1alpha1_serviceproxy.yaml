@@ -1,0 +1,11 @@
+apiVersion: cache.service-proxy-operator.local/v1alpha1
+kind: ServiceProxy
+metadata:
+  name: serviceproxy-sample
+spec:
+  serviceNames:
+    - agnhost
+    - other-agnhost
+
+
+  

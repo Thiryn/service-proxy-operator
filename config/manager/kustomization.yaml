@@ -1,0 +1,8 @@
+resources:
+- manager.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+images:
+- digest: sha256:49d67ad4aba1d26f2476ad56de6bd57677b17484052e3b89ef58e6a2f6cc72b3
+  name: controller
+  newName: localhost:5001/service-proxy-operator:0.0.1
